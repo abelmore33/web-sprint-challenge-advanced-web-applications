@@ -26,7 +26,10 @@ export default function LoginForm(props) {
     // ✨ implement
     values.username.trim();
     values.password.trim();
-    if (values.username.length >= 3 && values.password.length >= 8) {
+    if (
+      values.username.trim().length >= 3 &&
+      values.password.trim().length >= 8
+    ) {
       return false;
     } else {
       return true;

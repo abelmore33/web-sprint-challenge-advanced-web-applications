@@ -72,8 +72,12 @@ export default function App() {
     axios
       .create({ headers: { authorization: token } })
       .get("http://localhost:9000/api/articles")
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        setSpinnerOn(false);
+        setMessage(res.data.message);
+        setArticles(res.data.articles);
+      })
+      .catch((err) => redirectToLogin());
     // On success, we should set the articles in their proper state and
     // put the server success message in its proper state.
     // If something goes wrong, check the status of the response:
