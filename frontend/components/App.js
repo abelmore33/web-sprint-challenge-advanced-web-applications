@@ -21,16 +21,21 @@ export default function App() {
   const navigate = useNavigate();
   const redirectToLogin = () => {
     /* ✨ implement */
+    navigate("/");
   };
   const redirectToArticles = () => {
     /* ✨ implement */
+    navigate("/articles");
   };
 
   const logout = () => {
     // ✨ implement
     // If a token is in local storage it should be removed,
+    localStorage.clear("token");
     // and a message saying "Goodbye!" should be set in its proper state.
+    setMessage("GoodBye!");
     // In any case, we should redirect the browser back to the login screen,
+    redirectToLogin();
     // using the helper above.
   };
 
@@ -47,7 +52,7 @@ export default function App() {
       .then((res) => {
         localStorage.setItem("token", res.data.token);
         setMessage(res.data.message);
-        navigate("/articles");
+        redirectToArticles();
         setSpinnerOn(false);
       })
       .catch((err) => console.log(err));
@@ -59,7 +64,16 @@ export default function App() {
   const getArticles = () => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
+    setMessage("");
+    setSpinnerOn(true);
     // and launch an authenticated request to the proper endpoint.
+    const token = localStorage.getItem("token");
+    console.log(token);
+    axios
+      .create({ headers: { authorization: token } })
+      .get("http://localhost:9000/api/articles")
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
     // On success, we should set the articles in their proper state and
     // put the server success message in its proper state.
     // If something goes wrong, check the status of the response:
