@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import PT from "prop-types";
 
 export default function Articles(props) {
@@ -13,11 +13,18 @@ export default function Articles(props) {
   } = props;
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
   useEffect(() => {
     // ✨ grab the articles here, on first render only
-    getArticles();
+    if (!token) {
+      return navigate("/");
+    } else {
+      return getArticles();
+    }
   }, []);
+  console.log(currentArticleId);
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
@@ -37,7 +44,9 @@ export default function Articles(props) {
                 <div>
                   <button
                     disabled={false}
-                    onClick={() => console.log(art.article_id)}
+                    onClick={() => {
+                      setCurrentArticleId(art.article_id);
+                    }}
                   >
                     Edit
                   </button>

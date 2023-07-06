@@ -49,7 +49,7 @@ export default function ArticleForm(props) {
     // ✨ fix the JSX: make the heading display either "Edit" or "Create"
     // and replace Function.prototype with the correct function
     <form id="form" onSubmit={onSubmit}>
-      <h2>Create Article</h2>
+      <h2>{!currentArticle ? "Create Article" : "Edit"}</h2>
       <input
         maxLength={50}
         onChange={onChange}
@@ -74,7 +74,14 @@ export default function ArticleForm(props) {
         <button disabled={isDisabled()} id="submitArticle">
           Submit
         </button>
-        <button onClick={() => console.log("clicked")}>Cancel edit</button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            setValues(initialFormValues);
+          }}
+        >
+          Cancel edit
+        </button>
       </div>
     </form>
   );

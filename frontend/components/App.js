@@ -68,7 +68,7 @@ export default function App() {
     setSpinnerOn(true);
     // and launch an authenticated request to the proper endpoint.
     const token = localStorage.getItem("token");
-    console.log(token);
+
     axios
       .create({ headers: { authorization: token } })
       .get("http://localhost:9000/api/articles")
