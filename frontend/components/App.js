@@ -62,7 +62,7 @@ export default function App() {
     // to the Articles screen. Don't forget to turn off the spinner!
   };
 
-  const getArticles = () => {
+  const getArticles = (toggle) => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
 
@@ -74,10 +74,11 @@ export default function App() {
       .create({ headers: { authorization: token } })
       .get("http://localhost:9000/api/articles")
       .then((res) => {
-        console.log(res.data);
         setArticles(res.data.articles);
 
-        setMessage(res.data.message);
+        if (!toggle) {
+          setMessage(res.data.message);
+        }
 
         setSpinnerOn(false);
       })
@@ -104,6 +105,7 @@ export default function App() {
       })
       .post("http://localhost:9000/api/articles", article)
       .then((res) => {
+        getArticles(true);
         [...articles, article];
         setMessage(res.data.message);
         setSpinnerOn(false);
