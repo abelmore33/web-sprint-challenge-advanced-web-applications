@@ -24,7 +24,6 @@ export default function Articles(props) {
       return getArticles();
     }
   }, []);
-  console.log(currentArticleId);
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions

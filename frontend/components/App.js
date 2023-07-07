@@ -118,6 +118,7 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    setSpinnerOn(true);
     const token = localStorage.getItem("token");
     axios
       .create({
@@ -126,7 +127,11 @@ export default function App() {
         },
       })
       .put(`http://localhost:9000/api/articles/${article_id}`, article)
-      .then((res) => console.log(res))
+      .then((res) => {
+        getArticles(true);
+        setMessage(res.data.message);
+        setSpinnerOn(false);
+      })
       .catch((err) => console.log(err));
   };
 
