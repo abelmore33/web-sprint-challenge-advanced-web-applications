@@ -50,7 +50,10 @@ export default function Articles(props) {
                   >
                     Edit
                   </button>
-                  <button disabled={false} onClick={Function.prototype}>
+                  <button
+                    disabled={false}
+                    onClick={() => deleteArticle(art.article_id)}
+                  >
                     Delete
                   </button>
                 </div>

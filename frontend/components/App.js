@@ -42,6 +42,7 @@ export default function App() {
   const login = ({ username, password }) => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
+    setMessage;
     setSpinnerOn(true);
     // and launch a request to the proper endpoint.
     axios
@@ -50,10 +51,10 @@ export default function App() {
         password: password,
       })
       .then((res) => {
+        setSpinnerOn(false);
         localStorage.setItem("token", res.data.token);
         setMessage(res.data.message);
         redirectToArticles();
-        setSpinnerOn(false);
       })
       .catch((err) => console.log(err));
     // On success, we should set the token to local storage in a 'token' key,
@@ -64,7 +65,7 @@ export default function App() {
   const getArticles = () => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
-    setMessage("");
+
     setSpinnerOn(true);
     // and launch an authenticated request to the proper endpoint.
     const token = localStorage.getItem("token");
@@ -73,9 +74,12 @@ export default function App() {
       .create({ headers: { authorization: token } })
       .get("http://localhost:9000/api/articles")
       .then((res) => {
-        setSpinnerOn(false);
-        setMessage(res.data.message);
+        console.log(res.data);
         setArticles(res.data.articles);
+
+        setMessage(res.data.message);
+
+        setSpinnerOn(false);
       })
       .catch((err) => redirectToLogin());
     // On success, we should set the articles in their proper state and
@@ -100,9 +104,9 @@ export default function App() {
       })
       .post("http://localhost:9000/api/articles", article)
       .then((res) => {
-        setSpinnerOn(false);
+        [...articles, article];
         setMessage(res.data.message);
-        setArticles([...articles, article]);
+        setSpinnerOn(false);
       })
       .catch((err) => {
         console.log(err);
@@ -112,10 +116,36 @@ export default function App() {
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    const token = localStorage.getItem("token");
+    axios
+      .create({
+        headers: {
+          authorization: token,
+        },
+      })
+      .put(`http://localhost:9000/api/articles/${article_id}`, article)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const deleteArticle = (article_id) => {
     // ✨ implement
+    setSpinnerOn(true);
+
+    const token = localStorage.getItem("token");
+    axios
+      .create({
+        headers: {
+          authorization: token,
+        },
+      })
+      .delete(`http://localhost:9000/api/articles/${article_id}`)
+      .then((res) => {
+        setArticles(articles.filter((art) => article_id !== art.article_id));
+        setMessage(res.data.message);
+        setSpinnerOn(false);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -148,7 +178,8 @@ export default function App() {
                   postArticle={postArticle}
                   updateArticle={updateArticle}
                   setCurrentArticleId={setCurrentArticleId}
-                  currentArticle={currentArticleId}
+                  articles={articles}
+                  currentArticleId={currentArticleId}
                 />
                 <Articles
                   articles={articles}
